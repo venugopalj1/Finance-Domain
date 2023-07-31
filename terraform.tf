@@ -10,11 +10,11 @@ terraform {
 
 # Configure the AWS provider
 provider "aws" {
-  region = "us-east-1"
+  region = "ap-south-1"
 }
 # Creating a VPC
 resource "aws_vpc" "proj-vpc" {
- cidr_block = "10.0.0.0/16"
+ cidr_block = "172.31.0.0/16"
 }
 
 # Create an Internet Gateway
@@ -45,8 +45,8 @@ resource "aws_route_table" "proj-rt" {
 # Setting up the subnet
 resource "aws_subnet" "proj-subnet" {
  vpc_id = aws_vpc.proj-vpc.id
- cidr_block = "10.0.1.0/24"
- availability_zone = "us-east-1a"
+ cidr_block = "172.31.0.0/16"
+ availability_zone = "ap-south-1a"
  tags = {
  Name = "subnet1"
  }
@@ -128,8 +128,8 @@ resource "aws_eip" "proj-eip" {
 resource "aws_instance" "Prod-Server" {
  ami = "ami-08e5424edfe926b43"
  instance_type = "t2.micro"
- availability_zone = "us-east-1a"
- key_name = "venu"
+ availability_zone = "ap-south-1a"
+ key_name = "masterserver"
  network_interface {
  device_index = 0
  network_interface_id = aws_network_interface.proj-ni.id
@@ -139,7 +139,7 @@ resource "aws_instance" "Prod-Server" {
      sudo apt-get update -y
      sudo apt install docker.io -y
      sudo systemctl enable docker
-     sudo docker run -itd -p 8086:8081 venugopalj/financeme2:1.0
+     sudo docker run -itd -p 8081:8081 venugopalj/financeme2:1.0
      sudo docker start $(docker ps -aq)
      sudo docker run -itd -p 9100:9100 prom/node-exporter
  EOF
